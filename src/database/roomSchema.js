@@ -13,4 +13,4 @@ const room = mongoose.model('room',
   }),
 );
 
-module.exports = mongoose.model('room', room);
+module.exports = room;
