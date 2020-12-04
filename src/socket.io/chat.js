@@ -13,6 +13,7 @@ chat.on('connection', (socket) => {
       socket.join(roomID);
       chat.to(socket.id).emit('messages',messages);
     }
+
   });
 
   socket.on('exit', (roomID, payload) => {
@@ -28,6 +29,5 @@ chat.on('connection', (socket) => {
   socket.on('disconnect', () => {
     collection.exit(socket.exitHandler.roomID, socket.exitHandler);
   });
-  
 });
 
