@@ -10,7 +10,7 @@ const server = http.createServer(app);
 app.use(cors());
 app.use(express.json());
 
-
+console.log('hello world!');
 const io = socketio(server);
 const chat = io.of('/chat');
 chat.on('connection', (socket) => {
