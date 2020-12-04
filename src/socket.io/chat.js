@@ -2,7 +2,7 @@
 
 const { chat } = require('../server');
 
-// chat.on('connection', (socket) => {
-console.log('jjj');
-// });
+chat.on('connection', (socket) => {
+  console.log('jjj');
+});
 
