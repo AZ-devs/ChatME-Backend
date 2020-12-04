@@ -23,6 +23,7 @@ class Collection {
 
   async exit(roomID, payload) {
     const room = await schema.find({ _id: roomID });
+    console.log(payload.name,' Left')
     room.pepole = room.pepole.filter(person => {
       return payload.name !== person.name;
     });
