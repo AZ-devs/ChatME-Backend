@@ -37,6 +37,14 @@ class Collection {
     await room[0].save();
   }
 
+  async allRooms() {
+    let rooms = await schema.find({});
+    let roomsDetails = rooms.map(room => {
+      return { _id: room._id, name: room.name, pepole: room.pepole };
+    });
+    return roomsDetails.sort((a,b)=>a.pepole.length - b.pepole.length);
+  }
+
   async resetPeople() {
     let rooms = await schema.find({});
     rooms.map(async (room) => {
