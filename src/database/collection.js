@@ -6,7 +6,8 @@ class Collection {
   constructor() { }
 
   async createRoom(payload) {
-    const room = new schema({ name: payload });
+    const obj = payload.password === '' ? { name: payload.roomName } : { name: payload.roomName, password: payload.password, islocked: true };
+    const room = new schema(obj);
     await room.save();
     return room._id;
   }
@@ -42,7 +43,7 @@ class Collection {
     let roomsDetails = rooms.map(room => {
       return { _id: room._id, name: room.name, pepole: room.pepole };
     });
-    return roomsDetails.sort((a,b)=>a.pepole.length - b.pepole.length);
+    return roomsDetails.sort((a, b) => a.pepole.length - b.pepole.length);
   }
 
   async resetPeople() {
