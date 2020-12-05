@@ -6,7 +6,7 @@ const { chat } = require('../server');
 chat.on('connection', (socket) => {
   console.log(socket.id, 'connected');
 
-  socket.on('join', async (payload) => {
+  socket.on('join', async (payload) => {// name , rommID , password
     socket.exitHandler = { name: payload.name, roomID: payload.roomID };
     const messages = await collection.join(payload.roomID, payload);
     if (messages) {
@@ -16,26 +16,26 @@ chat.on('connection', (socket) => {
       let roomsDetails = await collection.allRooms();
       chat.emit('lobby', roomsDetails);
     }
-
   });
 
-  socket.on('exit', async (payload) => {
+  socket.on('exit', async (payload) => {// rommID , name
     await collection.exit(payload.roomID, payload);
     socket.leave(payload.roomID);
     let roomsDetails = await collection.allRooms();
     chat.emit('lobby', roomsDetails);
   });
 
-  socket.on('sendMessage', (payload) => {
+  socket.on('sendMessage', (payload) => {// roomID , name , avatar , text
     collection.sendMessage(payload.roomID, payload);
     chat.to(payload.roomID).emit('newMessage', payload);
   });
 
-  socket.on('createRoom', async (payload) => {
-    const roomID = await collection.createRoom(payload.roomName);
-    socket.exitHandler = { name: payload.name, roomID };
-    await collection.join(roomID, payload);
-    socket.join(roomID);
+  socket.on('createRoom', async (payload) => {// name , roomName , password 
+    const roomID = await collection.createRoom(payload);
+    payload.roomID = roomID;
+    socket.exitHandler = { name: payload.name, roomID: payload.roomID };
+    await collection.join(payload);
+    socket.join(payload.roomID);
     let roomsDetails = await collection.allRooms();
     chat.emit('lobby', roomsDetails);
   });
