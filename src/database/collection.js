@@ -14,7 +14,7 @@ class Collection {
 
   async join(roomID, payload) {
     const room = await schema.find({ _id: roomID });
-    console.log(1);
+    // console.log(1);
     if (room[0].islocked && payload.password === room[0].password || !room[0].islocked) {
       room[0].pepole = [...room[0].pepole, { name: payload.name, avatar: payload.avatar }];
       await room[0].save();
@@ -44,7 +44,7 @@ class Collection {
     let roomsDetails = rooms.map(room => {
       return { _id: room._id, name: room.name, pepole: room.pepole , islocked : room.islocked };
     });
-    return roomsDetails.sort((a, b) => a.pepole.length - b.pepole.length);
+    return roomsDetails.sort((a, b) => b.pepole.length - a.pepole.length);
   }
 
   async resetPeople() {
