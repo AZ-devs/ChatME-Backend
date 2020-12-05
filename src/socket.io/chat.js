@@ -3,15 +3,18 @@ const collection = require('../database/collection');
 
 const { chat } = require('../server');
 
-chat.on('connection', (socket) => {
+chat.on('connection', async (socket) => {
   console.log(socket.id, 'connected');
+  let roomsDetails = await collection.allRooms();
+  chat.to(socket.id).emit('lobby', roomsDetails);
 
   socket.on('join', async (payload) => {// name , rommID , password , avatar
     socket.exitHandler = { name: payload.name, roomID: payload.roomID };
     const messages = await collection.join(payload.roomID, payload);
-    if (messages) {
+    if (messages !== false) {
       console.log(socket.id, ' joined room:', payload.roomID);
       socket.join(payload.roomID);
+      chat.to(socket.id).emit('joinLocked',{});
       chat.to(socket.id).emit('messages', messages);
       let roomsDetails = await collection.allRooms();
       chat.emit('lobby', roomsDetails);
