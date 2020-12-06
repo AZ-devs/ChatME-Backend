@@ -37,7 +37,7 @@ chat.on('connection', async (socket) => {
   socket.on('createRoom', async (payload) => {// name , roomName , password , avatar
     const roomID = await collection.createRoom(payload);
     payload.roomID = roomID;
-    chat.emit('createdRoom', payload);
+    chat.to(socket.id).emit('createdRoom', payload);
   });
 
   socket.on('disconnect', async () => {
