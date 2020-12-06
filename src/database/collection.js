@@ -18,7 +18,8 @@ class Collection {
     if (room[0].islocked && payload.password === room[0].password || !room[0].islocked) {
       room[0].pepole = [...room[0].pepole, { name: payload.name, avatar: payload.avatar }];
       await room[0].save();
-      return room.messages;
+      // console.log('join collection',room[0].messages);
+      return room[0].messages?room[0].messages:[];
     } else {
       return false;
     }
@@ -35,8 +36,10 @@ class Collection {
 
   async sendMessage(roomID, payload) {
     const room = await schema.find({ _id: roomID });
-    room[0].messages.push({ name: payload.name, avatar: payload.avatar, text: [payload.text] });
+    console.log(room[0].messages);
+    room[0].messages = [...room[0].messages,{ name: payload.name, avatar: payload.avatar, text: payload.text }];
     await room[0].save();
+    return room[0].messages;
   }
 
   async allRooms() {

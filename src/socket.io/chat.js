@@ -29,8 +29,8 @@ chat.on('connection', async (socket) => {
   });
 
   socket.on('sendMessage', async (payload) => {// roomID , name , avatar , text
-    await collection.sendMessage(payload.roomID, payload);
-    chat.to(payload.roomID).emit('newMessage', payload);
+    const result = await collection.sendMessage(payload.roomID, payload);
+    chat.to(payload.roomID).emit('newMessage', result);
   });
 
   socket.on('createRoom', async (payload) => {// name , roomName , password , avatar
