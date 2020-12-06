@@ -14,11 +14,12 @@ class Collection {
 
   async join(roomID, payload) {
     const room = await schema.find({ _id: roomID });
-    // console.log(1);
+    console.log('please1');
     if (room[0].islocked && payload.password === room[0].password || !room[0].islocked) {
+      console.log('please2');
       room[0].pepole = [...room[0].pepole, { name: payload.name, avatar: payload.avatar }];
+      console.log('999',room[0].pepole);
       await room[0].save();
-      // console.log('join collection',room[0].messages);
       return room[0].messages?room[0].messages:[];
     } else {
       return false;

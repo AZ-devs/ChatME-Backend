@@ -10,14 +10,15 @@ chat.on('connection', async (socket) => {
 
   socket.on('join', async (payload) => {// name , rommID , password , avatar
     socket.exitHandler = { name: payload.name, roomID: payload.roomID };
+    console.log('1111',payload);
     const messages = await collection.join(payload.roomID, payload);
     if (messages !== false) {
       console.log(socket.id, ' joined room:', payload.roomID);
       socket.join(payload.roomID);
-      chat.to(socket.id).emit('joinLocked',{});
-      chat.to(socket.id).emit('messages', messages);
       let roomsDetails = await collection.allRooms();
       chat.emit('lobby', roomsDetails);
+      chat.to(socket.id).emit('joinLocked',{});
+      chat.to(socket.id).emit('messages', messages);
     }
   });
 
@@ -30,17 +31,13 @@ chat.on('connection', async (socket) => {
 
   socket.on('sendMessage', async (payload) => {// roomID , name , avatar , text
     const result = await collection.sendMessage(payload.roomID, payload);
-    chat.to(payload.roomID).emit('newMessage', result);
+    chat.to(payload.roomID).emit('messages', result);
   });
 
   socket.on('createRoom', async (payload) => {// name , roomName , password , avatar
-    console.log('from  createroom socket', payload);
     const roomID = await collection.createRoom(payload);
-    socket.exitHandler = { name: payload.name, roomID };
-    await collection.join(roomID, payload);
-    socket.join(roomID);
-    let roomsDetails = await collection.allRooms();
-    chat.emit('lobby', roomsDetails);
+    payload.roomID = roomID;
+    chat.emit('createdRoom', payload);
   });
 
   socket.on('disconnect', async () => {
