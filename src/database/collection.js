@@ -16,11 +16,9 @@ class Collection {
 
   async join(roomID, payload) {
     const room = await schema.find({ _id: roomID });
-    console.log('please1');
     if (room[0].islocked && payload.password === room[0].password || !room[0].islocked) {
-      console.log('please2');
+      console.log(payload.name, 'joined room:', payload.roomID);
       room[0].pepole = [...room[0].pepole, { name: payload.name, avatar: payload.avatar }];
-      console.log('999', room[0].pepole);
       await room[0].save();
       return room[0].messages ? room[0].messages : [];
     } else {
@@ -30,7 +28,7 @@ class Collection {
 
   async exit(roomID, payload) {
     const room = await schema.find({ _id: roomID });
-    console.log(payload.name, 'Left');
+    console.log(payload.name, 'leaved room:',roomID);
     room[0].pepole = room[0].pepole.filter(person => {
       return payload.name !== person.name;
     });
@@ -39,7 +37,6 @@ class Collection {
 
   async sendMessage(roomID, payload) {
     const room = await schema.find({ _id: roomID });
-    console.log(room[0].messages);
     room[0].messages = [...room[0].messages, { name: payload.name, avatar: payload.avatar, text: payload.text }];
     await room[0].save();
     return room[0].messages;
@@ -63,7 +60,6 @@ class Collection {
 
   async checkname(username) {
     let flag = await usernameSchema.find({ name: username });
-    console.log(flag);
     if (flag.length === 0) {
       const user = new usernameSchema({ name: username });
       await user.save();
