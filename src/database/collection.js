@@ -26,9 +26,15 @@ class Collection {
     }
   }
 
+  async getMsg(roomID) {
+    const room = await schema.find({ _id: roomID });
+    return room[0].messages ? room[0].messages : [];
+
+  }
+
   async exit(roomID, payload) {
     const room = await schema.find({ _id: roomID });
-    console.log(payload.name, 'leaved room:',roomID);
+    console.log(payload.name, 'leaved room:', roomID);
     room[0].pepole = room[0].pepole.filter(person => {
       return payload.name !== person.name;
     });

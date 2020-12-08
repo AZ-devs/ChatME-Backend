@@ -13,6 +13,11 @@ chat.on('connection', async (socket) => {
     chat.to(socket.id).emit('lobby', roomsDetails);
   });
 
+  socket.on('getMsg',async(payload)=>{
+    const messages = await collection.getMsg(payload);
+    chat.to(socket.id).emit('messages', messages);
+  });
+
   socket.on('join', async (payload) => {// name , rommID , password , avatar
     socket.exitHandler = { name: payload.name, roomID: payload.roomID };
     const messages = await collection.join(payload.roomID, payload);
