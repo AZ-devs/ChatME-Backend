@@ -27,6 +27,8 @@ chat.on('connection', async (socket) => {
       chat.emit('lobby', roomsDetails);
       chat.to(socket.id).emit('joinLocked', {});
       chat.to(socket.id).emit('messages', messages);
+    }else{
+      chat.to(socket.id).emit('wrongPass',{});
     }
   });
 
