@@ -8,6 +8,11 @@ chat.on('connection', async (socket) => {
   let roomsDetails = await collection.allRooms();
   chat.to(socket.id).emit('lobby', roomsDetails);
 
+  socket.on('rooms', async() => {
+    let roomsDetails = await collection.allRooms();
+    chat.emit('lobby', roomsDetails);
+  });
+
   socket.on('join', async (payload) => {// name , rommID , password , avatar
     socket.exitHandler = { name: payload.name, roomID: payload.roomID };
     const messages = await collection.join(payload.roomID, payload);
@@ -49,7 +54,7 @@ chat.on('connection', async (socket) => {
 
   socket.on('auth', async (payload) => {
     let check = await collection.checkname(payload.username);
-    chat.to(socket.id).emit('auth', {check,image:payload.image});
+    chat.to(socket.id).emit('auth', { check, image: payload.image });
   });
 
 });
