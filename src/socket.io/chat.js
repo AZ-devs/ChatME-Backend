@@ -10,7 +10,7 @@ chat.on('connection', async (socket) => {
 
   socket.on('rooms', async() => {
     let roomsDetails = await collection.allRooms();
-    chat.emit('lobby', roomsDetails);
+    chat.to(socket.id).emit('lobby', roomsDetails);
   });
 
   socket.on('join', async (payload) => {// name , rommID , password , avatar
